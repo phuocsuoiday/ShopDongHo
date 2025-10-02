@@ -1,4 +1,4 @@
-claude--dangerously - skip - permissionsusing System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace ShopDongHo.Models.ViewModels
 {

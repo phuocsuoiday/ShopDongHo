@@ -4,7 +4,7 @@ namespace ShopDongHo.Models.Entities
 {
     public class ShopDbContext : DbContext
     {
-        public ShopDbContext() : base("ShopDongHoConnection")
+        public ShopDbContext() : base("ShopDongHo")
         {
         }
 
@@ -16,6 +16,24 @@ namespace ShopDongHo.Models.Entities
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            // Configure decimal precision
+            modelBuilder.Entity<Product>()
+                .Property(p => p.Price)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Product>()
+                .Property(p => p.OriginalPrice)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Order>()
+                .Property(o => o.TotalAmount)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<OrderDetail>()
+                .Property(od => od.Price)
+                .HasPrecision(18, 2);
+
+            // Configure relationships
             modelBuilder.Entity<Product>()
                 .HasRequired(p => p.Category)
                 .WithMany(c => c.Products)

@@ -111,7 +111,7 @@ namespace ShopDongHo.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public ActionResult Profile()
+        public new ActionResult Profile()
         {
             if (!AuthHelper.IsAuthenticated())
             {
@@ -140,7 +140,7 @@ namespace ShopDongHo.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Profile(RegisterViewModel model)
+        public new ActionResult Profile(RegisterViewModel model)
         {
             if (!AuthHelper.IsAuthenticated())
             {
