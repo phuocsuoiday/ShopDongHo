@@ -1,5 +1,4 @@
 @model List<ShopDongHo.Models.ViewModels.CartItemViewModel>
-@using ShopDongHo.Helpers
 @{
     ViewBag.Title = "Giỏ hàng";
 }
@@ -35,7 +34,7 @@ else
                             <tr>
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        <img src="@ImageHelper.GetProductImageUrl(item.Image)" alt="@item.ProductName"
+                                        <img src="@Url.Content("~/Content/images/products/" + (item.Image ?? "no-image.jpg"))" alt="@item.ProductName"
                                              style="width: 80px; height: 80px; object-fit: cover;" class="me-3">
                                         <div>
                                             @Html.ActionLink(item.ProductName, "Detail", "Product", new { id = item.ProductId }, new { @class = "text-decoration-none" })

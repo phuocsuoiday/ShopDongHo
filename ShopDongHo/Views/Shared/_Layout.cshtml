@@ -1,5 +1,4 @@
-﻿@using ShopDongHo.Helpers
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="utf-8" />
@@ -37,19 +36,23 @@
                     <li class="nav-item">
                         <a href="@Url.Action("Index", "Cart")" class="nav-link">
                             <i class="bi bi-cart"></i> Giỏ hàng
-                            <span class="badge bg-danger">@SessionHelper.GetCartItemCount()</span>
+                            @{
+                                var cart = Session["Cart"] as List<ShopDongHo.Models.ViewModels.CartItemViewModel> ?? new List<ShopDongHo.Models.ViewModels.CartItemViewModel>();
+                                var cartItemCount = cart.Sum(c => c.Quantity);
+                            }
+                            <span class="badge bg-danger">@cartItemCount</span>
                         </a>
                     </li>
-                    @if (AuthHelper.IsAuthenticated())
+                    @if (Session["UserId"] != null)
                     {
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                                @AuthHelper.GetCurrentUsername()
+                                @Session["Username"]
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>@Html.ActionLink("Thông tin cá nhân", "Profile", "Account", null, new { @class = "dropdown-item" })</li>
                                 <li>@Html.ActionLink("Đơn hàng của tôi", "History", "Order", null, new { @class = "dropdown-item" })</li>
-                                @if (AuthHelper.IsAdmin())
+                                @if (Session["Role"]?.ToString() == "Admin")
                                 {
                                     <li><hr class="dropdown-divider"></li>
                                     <li>@Html.ActionLink("Quản trị", "Dashboard", "Admin", null, new { @class = "dropdown-item" })</li>

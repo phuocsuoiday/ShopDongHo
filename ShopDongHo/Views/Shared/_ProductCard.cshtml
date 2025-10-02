@@ -1,8 +1,7 @@
 @model ShopDongHo.Models.Entities.Product
-@using ShopDongHo.Helpers
 
 <div class="card h-100">
-    <img src="@ImageHelper.GetProductImageUrl(Model.Image)" class="card-img-top" alt="@Model.Name" style="height: 250px; object-fit: cover;">
+    <img src="@Url.Content("~/Content/images/products/" + (Model.Image ?? "no-image.jpg"))" class="card-img-top" alt="@Model.Name" style="height: 250px; object-fit: cover;">
     <div class="card-body d-flex flex-column">
         <h5 class="card-title">@Model.Name</h5>
         <p class="card-text text-muted small">@Model.Brand</p>

@@ -1,4 +1,3 @@
-using ShopDongHo.Helpers;
 using ShopDongHo.Models.Entities;
 using ShopDongHo.Models.Repositories;
 using ShopDongHo.Models.ViewModels;
@@ -19,7 +18,7 @@ namespace ShopDongHo.Controllers
 
         public ActionResult Login(string returnUrl)
         {
-            if (AuthHelper.IsAuthenticated())
+            if (Session["UserId"] != null)
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -45,7 +44,9 @@ namespace ShopDongHo.Controllers
                 return View(model);
             }
 
-            AuthHelper.SetUserSession(user.Id, user.Username, user.Role);
+            Session["UserId"] = user.Id;
+            Session["Username"] = user.Username;
+            Session["Role"] = user.Role;
             TempData["SuccessMessage"] = $"Xin chào {user.FullName ?? user.Username}!";
 
             if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
@@ -58,7 +59,7 @@ namespace ShopDongHo.Controllers
 
         public ActionResult Register()
         {
-            if (AuthHelper.IsAuthenticated())
+            if (Session["UserId"] != null)
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -106,23 +107,23 @@ namespace ShopDongHo.Controllers
 
         public ActionResult Logout()
         {
-            AuthHelper.ClearUserSession();
+            Session.Clear();
             TempData["SuccessMessage"] = "Đã đăng xuất thành công.";
             return RedirectToAction("Index", "Home");
         }
 
         public new ActionResult Profile()
         {
-            if (!AuthHelper.IsAuthenticated())
+            if (Session["UserId"] == null)
             {
                 return RedirectToAction("Login");
             }
 
-            var user = _userRepo.GetById(AuthHelper.GetCurrentUserId().Value);
+            var user = _userRepo.GetById((int)Session["UserId"]);
 
             if (user == null)
             {
-                AuthHelper.ClearUserSession();
+                Session.Clear();
                 return RedirectToAction("Login");
             }
 
@@ -142,7 +143,7 @@ namespace ShopDongHo.Controllers
         [ValidateAntiForgeryToken]
         public new ActionResult Profile(RegisterViewModel model)
         {
-            if (!AuthHelper.IsAuthenticated())
+            if (Session["UserId"] == null)
             {
                 return RedirectToAction("Login");
             }
@@ -155,7 +156,7 @@ namespace ShopDongHo.Controllers
                 return View(model);
             }
 
-            var user = _userRepo.GetById(AuthHelper.GetCurrentUserId().Value);
+            var user = _userRepo.GetById((int)Session["UserId"]);
 
             if (user == null)
             {

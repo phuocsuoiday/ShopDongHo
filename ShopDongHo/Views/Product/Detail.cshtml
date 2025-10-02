@@ -1,5 +1,4 @@
 @model ShopDongHo.Models.Entities.Product
-@using ShopDongHo.Helpers
 @{
     ViewBag.Title = Model.Name;
     var relatedProducts = ViewBag.RelatedProducts as List<ShopDongHo.Models.Entities.Product>;
@@ -7,7 +6,7 @@
 
 <div class="row">
     <div class="col-md-6 mb-4">
-        <img src="@ImageHelper.GetProductImageUrl(Model.Image)" alt="@Model.Name" class="product-detail-image border rounded">
+        <img src="@Url.Content("~/Content/images/products/" + (Model.Image ?? "no-image.jpg"))" alt="@Model.Name" class="product-detail-image border rounded">
     </div>
 
     <div class="col-md-6">

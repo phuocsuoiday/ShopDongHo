@@ -1,9 +1,8 @@
-using ShopDongHo.Filters;
-using ShopDongHo.Helpers;
 using ShopDongHo.Models.Entities;
 using ShopDongHo.Models.Repositories;
 using ShopDongHo.Models.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -31,7 +30,7 @@ namespace ShopDongHo.Controllers
                 return View("~/Views/Cart/Checkout.cshtml", model);
             }
 
-            var cart = SessionHelper.GetCart();
+            var cart = Session["Cart"] as List<CartItemViewModel> ?? new List<CartItemViewModel>();
 
             if (!cart.Any())
             {
@@ -51,7 +50,7 @@ namespace ShopDongHo.Controllers
 
             var order = new Order
             {
-                UserId = AuthHelper.GetCurrentUserId(),
+                UserId = Session["UserId"] as int?,
                 CustomerName = model.CustomerName,
                 CustomerEmail = model.CustomerEmail,
                 CustomerPhone = model.CustomerPhone,
@@ -59,7 +58,7 @@ namespace ShopDongHo.Controllers
                 Note = model.Note,
                 OrderDate = DateTime.Now,
                 Status = "Pending",
-                TotalAmount = SessionHelper.GetCartTotal()
+                TotalAmount = cart.Sum(c => c.Price * c.Quantity)
             };
 
             _context.Orders.Add(order);
@@ -86,7 +85,7 @@ namespace ShopDongHo.Controllers
 
             _context.SaveChanges();
 
-            SessionHelper.ClearCart();
+            Session["Cart"] = new List<CartItemViewModel>();
 
             return RedirectToAction("Confirm", new { id = order.Id });
         }
@@ -100,7 +99,7 @@ namespace ShopDongHo.Controllers
                 return HttpNotFound();
             }
 
-            var currentUserId = AuthHelper.GetCurrentUserId();
+            var currentUserId = Session["UserId"] as int?;
             if (order.UserId.HasValue && currentUserId != order.UserId)
             {
                 return HttpNotFound();
@@ -109,16 +108,19 @@ namespace ShopDongHo.Controllers
             return View(order);
         }
 
-        [AuthorizeRole]
         public ActionResult History()
         {
-            var userId = AuthHelper.GetCurrentUserId().Value;
+            if (Session["UserId"] == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var userId = (int)Session["UserId"];
             var orders = _orderRepo.GetOrdersByUserId(userId);
 
             return View(orders);
         }
 
-        [AuthorizeRole]
         public ActionResult Detail(int id)
         {
             var order = _orderRepo.GetOrderWithDetails(id);
@@ -128,8 +130,14 @@ namespace ShopDongHo.Controllers
                 return HttpNotFound();
             }
 
-            var currentUserId = AuthHelper.GetCurrentUserId().Value;
-            if (order.UserId != currentUserId && !AuthHelper.IsAdmin())
+            if (Session["UserId"] == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var currentUserId = (int)Session["UserId"];
+            var isAdmin = Session["Role"]?.ToString() == "Admin";
+            if (order.UserId != currentUserId && !isAdmin)
             {
                 return HttpNotFound();
             }

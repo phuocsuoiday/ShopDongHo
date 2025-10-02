@@ -1,15 +1,13 @@
-using ShopDongHo.Filters;
-using ShopDongHo.Helpers;
 using ShopDongHo.Models.Entities;
 using ShopDongHo.Models.Repositories;
 using ShopDongHo.Models.ViewModels;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
 namespace ShopDongHo.Controllers
 {
-    [AdminAuthorize]
     public class AdminController : Controller
     {
         private readonly ShopDbContext _context;
@@ -29,6 +27,11 @@ namespace ShopDongHo.Controllers
 
         public ActionResult Dashboard()
         {
+            if (Session["Role"] == null || Session["Role"].ToString() != "Admin")
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             ViewBag.TotalProducts = _productRepo.Count();
             ViewBag.TotalCategories = _categoryRepo.Count();
             ViewBag.TotalOrders = _orderRepo.Count();
@@ -87,7 +90,10 @@ namespace ShopDongHo.Controllers
             {
                 try
                 {
-                    product.Image = ImageHelper.SaveProductImage(imageFile);
+                    var fileName = Path.GetFileName(imageFile.FileName);
+                    var path = Path.Combine(Server.MapPath("~/Content/images/products"), fileName);
+                    imageFile.SaveAs(path);
+                    product.Image = fileName;
                 }
                 catch (System.Exception ex)
                 {
@@ -162,9 +168,16 @@ namespace ShopDongHo.Controllers
                 {
                     if (!string.IsNullOrEmpty(product.Image))
                     {
-                        ImageHelper.DeleteProductImage(product.Image);
+                        var oldPath = Path.Combine(Server.MapPath("~/Content/images/products"), product.Image);
+                        if (System.IO.File.Exists(oldPath))
+                        {
+                            System.IO.File.Delete(oldPath);
+                        }
                     }
-                    product.Image = ImageHelper.SaveProductImage(imageFile);
+                    var fileName = Path.GetFileName(imageFile.FileName);
+                    var path = Path.Combine(Server.MapPath("~/Content/images/products"), fileName);
+                    imageFile.SaveAs(path);
+                    product.Image = fileName;
                 }
                 catch (System.Exception ex)
                 {
@@ -192,7 +205,11 @@ namespace ShopDongHo.Controllers
 
             if (!string.IsNullOrEmpty(product.Image))
             {
-                ImageHelper.DeleteProductImage(product.Image);
+                var imagePath = Path.Combine(Server.MapPath("~/Content/images/products"), product.Image);
+                if (System.IO.File.Exists(imagePath))
+                {
+                    System.IO.File.Delete(imagePath);
+                }
             }
 
             _productRepo.Delete(product);

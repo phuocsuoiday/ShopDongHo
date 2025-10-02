@@ -1,7 +1,7 @@
-using ShopDongHo.Helpers;
 using ShopDongHo.Models.Entities;
 using ShopDongHo.Models.Repositories;
 using ShopDongHo.Models.ViewModels;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -20,7 +20,7 @@ namespace ShopDongHo.Controllers
 
         public ActionResult Index()
         {
-            var cart = SessionHelper.GetCart();
+            var cart = Session["Cart"] as List<CartItemViewModel> ?? new List<CartItemViewModel>();
             return View(cart);
         }
 
@@ -41,16 +41,26 @@ namespace ShopDongHo.Controllers
                 return RedirectToAction("Detail", "Product", new { id });
             }
 
-            var cartItem = new CartItemViewModel
-            {
-                ProductId = product.Id,
-                ProductName = product.Name,
-                Image = product.Image,
-                Price = product.Price,
-                Quantity = quantity
-            };
+            var cart = Session["Cart"] as List<CartItemViewModel> ?? new List<CartItemViewModel>();
+            var existingItem = cart.FirstOrDefault(c => c.ProductId == product.Id);
 
-            SessionHelper.AddToCart(cartItem);
+            if (existingItem != null)
+            {
+                existingItem.Quantity += quantity;
+            }
+            else
+            {
+                cart.Add(new CartItemViewModel
+                {
+                    ProductId = product.Id,
+                    ProductName = product.Name,
+                    Image = product.Image,
+                    Price = product.Price,
+                    Quantity = quantity
+                });
+            }
+
+            Session["Cart"] = cart;
             TempData["SuccessMessage"] = $"Đã thêm {product.Name} vào giỏ hàng.";
 
             return RedirectToAction("Index");
@@ -70,20 +80,31 @@ namespace ShopDongHo.Controllers
                 return Json(new { success = false, message = "Số lượng vượt quá tồn kho" });
             }
 
-            SessionHelper.UpdateCartItem(productId, quantity);
+            var cart = Session["Cart"] as List<CartItemViewModel> ?? new List<CartItemViewModel>();
+            var item = cart.FirstOrDefault(c => c.ProductId == productId);
+
+            if (item != null)
+            {
+                item.Quantity = quantity;
+            }
+
+            Session["Cart"] = cart;
 
             return Json(new
             {
                 success = true,
-                cartTotal = SessionHelper.GetCartTotal(),
-                cartItemCount = SessionHelper.GetCartItemCount()
+                cartTotal = cart.Sum(c => c.Price * c.Quantity),
+                cartItemCount = cart.Sum(c => c.Quantity)
             });
         }
 
         [HttpPost]
         public ActionResult RemoveFromCart(int productId)
         {
-            SessionHelper.RemoveFromCart(productId);
+            var cart = Session["Cart"] as List<CartItemViewModel> ?? new List<CartItemViewModel>();
+            cart.RemoveAll(c => c.ProductId == productId);
+            Session["Cart"] = cart;
+
             TempData["SuccessMessage"] = "Đã xóa sản phẩm khỏi giỏ hàng.";
 
             return RedirectToAction("Index");
@@ -91,7 +112,7 @@ namespace ShopDongHo.Controllers
 
         public ActionResult Checkout()
         {
-            var cart = SessionHelper.GetCart();
+            var cart = Session["Cart"] as List<CartItemViewModel> ?? new List<CartItemViewModel>();
 
             if (!cart.Any())
             {
@@ -101,10 +122,10 @@ namespace ShopDongHo.Controllers
 
             var model = new CheckoutViewModel();
 
-            if (AuthHelper.IsAuthenticated())
+            if (Session["UserId"] != null)
             {
                 var userRepo = new UserRepository(_context);
-                var user = userRepo.GetById(AuthHelper.GetCurrentUserId().Value);
+                var user = userRepo.GetById((int)Session["UserId"]);
 
                 if (user != null)
                 {
@@ -120,7 +141,7 @@ namespace ShopDongHo.Controllers
 
         public ActionResult ClearCart()
         {
-            SessionHelper.ClearCart();
+            Session["Cart"] = new List<CartItemViewModel>();
             TempData["SuccessMessage"] = "Đã xóa tất cả sản phẩm trong giỏ hàng.";
             return RedirectToAction("Index");
         }
