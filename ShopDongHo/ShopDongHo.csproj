@@ -152,14 +152,9 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
-    <Compile Include="Filters\AdminAuthorizeAttribute.cs" />
-    <Compile Include="Filters\AuthorizeRoleAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\AuthHelper.cs" />
-    <Compile Include="Helpers\ImageHelper.cs" />
-    <Compile Include="Helpers\SessionHelper.cs" />
     <Compile Include="Migrations\202510020943053_InitialCreate.cs" />
     <Compile Include="Migrations\202510020943053_InitialCreate.Designer.cs">
       <DependentUpon>202510020943053_InitialCreate.cs</DependentUpon>
