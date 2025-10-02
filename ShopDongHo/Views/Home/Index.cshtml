@@ -1,0 +1,53 @@
+﻿@{
+    ViewBag.Title = "Trang chủ";
+}
+
+<div class="jumbotron bg-light p-5 rounded-3">
+    <h1 class="display-4">Chào mừng đến Shop Đồng Hồ!</h1>
+    <p class="lead">Chuyên cung cấp các dòng đồng hồ chính hãng, uy tín với giá cả hợp lý nhất thị trường.</p>
+    <hr class="my-4">
+    <p>Khám phá bộ sưu tập đồng hồ đa dạng từ các thương hiệu nổi tiếng thế giới.</p>
+    <p class="lead">
+        @Html.ActionLink("Xem sản phẩm", "Index", "Product", null, new { @class = "btn btn-primary btn-lg" })
+    </p>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 text-center">
+            <div class="card-body">
+                <i class="bi bi-shield-check fs-1 text-primary"></i>
+                <h3 class="card-title mt-3">Chính hãng 100%</h3>
+                <p class="card-text">Tất cả sản phẩm đều được nhập khẩu chính hãng, có tem bảo hành đầy đủ.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 text-center">
+            <div class="card-body">
+                <i class="bi bi-truck fs-1 text-primary"></i>
+                <h3 class="card-title mt-3">Giao hàng toàn quốc</h3>
+                <p class="card-text">Miễn phí giao hàng cho đơn hàng từ 500.000đ trong nội thành.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 text-center">
+            <div class="card-body">
+                <i class="bi bi-headset fs-1 text-primary"></i>
+                <h3 class="card-title mt-3">Hỗ trợ 24/7</h3>
+                <p class="card-text">Đội ngũ tư vấn chuyên nghiệp, nhiệt tình, sẵn sàng hỗ trợ mọi lúc.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-12">
+        <h2 class="text-center mb-4">Sản phẩm nổi bật</h2>
+        <p class="text-center text-muted">Các sản phẩm đồng hồ được yêu thích nhất</p>
+        <div class="text-center mt-4">
+            @Html.ActionLink("Xem tất cả sản phẩm →", "Index", "Product", null, new { @class = "btn btn-outline-primary" })
+        </div>
+    </div>
+</div>

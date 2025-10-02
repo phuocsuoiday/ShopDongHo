@@ -1,0 +1,36 @@
+@using ShopDongHo.Helpers
+
+@{
+    var cart = SessionHelper.GetCart();
+    var itemCount = SessionHelper.GetCartItemCount();
+    var total = SessionHelper.GetCartTotal();
+}
+
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Tóm tắt đơn hàng</h5>
+    </div>
+    <div class="card-body">
+        <div class="d-flex justify-content-between mb-2">
+            <span>Số lượng sản phẩm:</span>
+            <span class="fw-bold">@itemCount</span>
+        </div>
+        <hr>
+        <div class="d-flex justify-content-between mb-3">
+            <span class="fw-bold">Tổng cộng:</span>
+            <span class="fw-bold text-danger fs-5">@total.ToString("N0") đ</span>
+        </div>
+        @if (cart.Any())
+        {
+            if (ViewBag.ShowCheckoutButton != false)
+            {
+                @Html.ActionLink("Tiến hành đặt hàng", "Checkout", "Cart", null, new { @class = "btn btn-primary w-100" })
+            }
+            @Html.ActionLink("Tiếp tục mua hàng", "Index", "Product", null, new { @class = "btn btn-outline-secondary w-100 mt-2" })
+        }
+        else
+        {
+            @Html.ActionLink("Bắt đầu mua hàng", "Index", "Product", null, new { @class = "btn btn-primary w-100" })
+        }
+    </div>
+</div>

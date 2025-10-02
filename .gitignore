@@ -1,0 +1,94 @@
+## Visual Studio files
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
+
+## MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+## NuGet Packages
+*.nupkg
+**/packages/*
+!**/packages/build/
+*.nuget.props
+*.nuget.targets
+
+## Visual Studio cache/options
+.vs/
+*.suo
+*.user
+*.sln.docstates
+
+## SQL Server files
+*.mdf
+*.ldf
+*.ndf
+
+## Database files
+App_Data/*.mdf
+App_Data/*.ldf
+
+## Entity Framework
+*.edmx.sql
+*.edmx.diagram
+
+## User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## Mono auto generated files
+mono_crash.*
+
+## Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+## Folder config file
+Desktop.ini
+
+## Node.js (if any)
+node_modules/
+npm-debug.log*
+
+## Upload files
+Content/images/products/*
+!Content/images/products/.gitkeep
+
+## Backup files
+*.bak
+*.tmp
+*.old
+
+## ReSharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+## JetBrains Rider
+.idea/
+*.sln.iml
+
+## VS Code
+.vscode/
+
+## Test files (optional - có thể bỏ comment nếu muốn push)
+TestConnection.sql
+TestDbConnection.aspx

@@ -1,0 +1,80 @@
+@model ShopDongHo.Models.ViewModels.ProductViewModel
+@{
+    ViewBag.Title = "Sản phẩm";
+}
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="filter-sidebar">
+            <h5>Bộ lọc</h5>
+
+            <form method="get" action="@Url.Action("Index")">
+                <div class="mb-3">
+                    <label class="form-label">Danh mục</label>
+                    <select name="categoryId" class="form-select" onchange="this.form.submit()">
+                        <option value="">Tất cả</option>
+                        @foreach (var category in Model.Categories)
+                        {
+                            <option value="@category.Id" @(Model.SelectedCategoryId == category.Id ? "selected" : "")>
+                                @category.Name
+                            </option>
+                        }
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Thương hiệu</label>
+                    <select name="brand" class="form-select" onchange="this.form.submit()">
+                        <option value="">Tất cả</option>
+                        @foreach (var brand in Model.Brands)
+                        {
+                            <option value="@brand" @(Model.SelectedBrand == brand ? "selected" : "")>
+                                @brand
+                            </option>
+                        }
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Khoảng giá</label>
+                    <div class="input-group mb-2">
+                        <input type="number" name="minPrice" class="form-control" placeholder="Từ" value="@Model.MinPrice">
+                    </div>
+                    <div class="input-group">
+                        <input type="number" name="maxPrice" class="form-control" placeholder="Đến" value="@Model.MaxPrice">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Lọc</button>
+                <a href="@Url.Action("Index")" class="btn btn-outline-secondary w-100 mt-2">Xóa bộ lọc</a>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-md-9">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Sản phẩm</h2>
+            <div class="text-muted">Tìm thấy @Model.Products.Count() sản phẩm</div>
+        </div>
+
+        @if (!Model.Products.Any())
+        {
+            <div class="alert alert-info">
+                Không tìm thấy sản phẩm nào phù hợp.
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                @foreach (var product in Model.Products)
+                {
+                    <div class="col-md-4 col-sm-6 mb-4">
+                        @Html.Partial("_ProductCard", product)
+                    </div>
+                }
+            </div>
+
+            @Html.Partial("_Pagination", Model)
+        }
+    </div>
+</div>

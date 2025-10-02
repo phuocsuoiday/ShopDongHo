@@ -1,0 +1,97 @@
+﻿@{
+    ViewBag.Title = "Liên hệ";
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <h1 class="mb-4">@ViewBag.Title</h1>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h4>Thông tin liên hệ</h4>
+                <p class="mb-3">Nếu bạn có bất kỳ câu hỏi nào, vui lòng liên hệ với chúng tôi qua các thông tin dưới đây:</p>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <h5><i class="bi bi-geo-alt-fill text-primary"></i> Địa chỉ</h5>
+                        <p>123 Đường ABC, Quận 1<br>Thành phố Hồ Chí Minh, Việt Nam</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <h5><i class="bi bi-telephone-fill text-primary"></i> Điện thoại</h5>
+                        <p>Hotline: <a href="tel:0123456789">0123 456 789</a><br>
+                           Tư vấn: <a href="tel:0987654321">0987 654 321</a></p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <h5><i class="bi bi-envelope-fill text-primary"></i> Email</h5>
+                        <p>Liên hệ: <a href="mailto:contact@shopdongho.com">contact@shopdongho.com</a><br>
+                           Hỗ trợ: <a href="mailto:support@shopdongho.com">support@shopdongho.com</a></p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <h5><i class="bi bi-clock-fill text-primary"></i> Giờ làm việc</h5>
+                        <p>Thứ 2 - Thứ 7: 8:00 - 21:00<br>
+                           Chủ nhật: 9:00 - 20:00</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h4>Gửi tin nhắn cho chúng tôi</h4>
+                <form>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Họ và tên *</label>
+                        <input type="text" class="form-control" id="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email *</label>
+                        <input type="email" class="form-control" id="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Số điện thoại</label>
+                        <input type="tel" class="form-control" id="phone">
+                    </div>
+                    <div class="mb-3">
+                        <label for="message" class="form-label">Nội dung *</label>
+                        <textarea class="form-control" id="message" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Gửi tin nhắn</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card bg-light">
+            <div class="card-body">
+                <h5 class="card-title">Kết nối với chúng tôi</h5>
+                <div class="d-grid gap-2">
+                    <a href="#" class="btn btn-outline-primary">
+                        <i class="bi bi-facebook"></i> Facebook
+                    </a>
+                    <a href="#" class="btn btn-outline-info">
+                        <i class="bi bi-twitter"></i> Twitter
+                    </a>
+                    <a href="#" class="btn btn-outline-danger">
+                        <i class="bi bi-instagram"></i> Instagram
+                    </a>
+                    <a href="#" class="btn btn-outline-success">
+                        <i class="bi bi-whatsapp"></i> WhatsApp
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-body">
+                <h5 class="card-title">Chính sách</h5>
+                <ul class="list-unstyled">
+                    <li><a href="#">Chính sách bảo hành</a></li>
+                    <li><a href="#">Chính sách đổi trả</a></li>
+                    <li><a href="#">Chính sách vận chuyển</a></li>
+                    <li><a href="#">Chính sách bảo mật</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

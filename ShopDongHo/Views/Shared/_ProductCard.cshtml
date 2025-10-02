@@ -1,0 +1,35 @@
+@model ShopDongHo.Models.Entities.Product
+@using ShopDongHo.Helpers
+
+<div class="card h-100">
+    <img src="@ImageHelper.GetProductImageUrl(Model.Image)" class="card-img-top" alt="@Model.Name" style="height: 250px; object-fit: cover;">
+    <div class="card-body d-flex flex-column">
+        <h5 class="card-title">@Model.Name</h5>
+        <p class="card-text text-muted small">@Model.Brand</p>
+        <div class="mt-auto">
+            @if (Model.OriginalPrice.HasValue && Model.OriginalPrice > Model.Price)
+            {
+                <p class="mb-1">
+                    <span class="text-decoration-line-through text-muted">@Model.OriginalPrice.Value.ToString("N0") đ</span>
+                </p>
+            }
+            <p class="text-danger fw-bold fs-5 mb-2">@Model.Price.ToString("N0") đ</p>
+
+            <div class="d-flex gap-2">
+                @Html.ActionLink("Xem chi tiết", "Detail", "Product", new { id = Model.Id }, new { @class = "btn btn-outline-primary btn-sm flex-fill" })
+                <a href="@Url.Action("AddToCart", "Cart", new { id = Model.Id })" class="btn btn-primary btn-sm flex-fill">
+                    <i class="bi bi-cart-plus"></i> Thêm
+                </a>
+            </div>
+        </div>
+    </div>
+    @if (Model.Stock <= 0)
+    {
+        <div class="position-absolute top-0 start-0 badge bg-danger m-2">Hết hàng</div>
+    }
+    else if (Model.OriginalPrice.HasValue && Model.OriginalPrice > Model.Price)
+    {
+        var discount = (int)(((Model.OriginalPrice.Value - Model.Price) / Model.OriginalPrice.Value) * 100);
+        <div class="position-absolute top-0 start-0 badge bg-success m-2">-@discount%</div>
+    }
+</div>

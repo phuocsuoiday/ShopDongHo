@@ -1,0 +1,111 @@
+@model List<ShopDongHo.Models.ViewModels.CartItemViewModel>
+@using ShopDongHo.Helpers
+@{
+    ViewBag.Title = "Giỏ hàng";
+}
+
+<h2 class="mb-4">Giỏ hàng của bạn</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        <h4>Giỏ hàng trống</h4>
+        <p>Bạn chưa có sản phẩm nào trong giỏ hàng.</p>
+        @Html.ActionLink("Mua sắm ngay", "Index", "Product", null, new { @class = "btn btn-primary" })
+    </div>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-8">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Sản phẩm</th>
+                            <th>Đơn giá</th>
+                            <th>Số lượng</th>
+                            <th>Thành tiền</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img src="@ImageHelper.GetProductImageUrl(item.Image)" alt="@item.ProductName"
+                                             style="width: 80px; height: 80px; object-fit: cover;" class="me-3">
+                                        <div>
+                                            @Html.ActionLink(item.ProductName, "Detail", "Product", new { id = item.ProductId }, new { @class = "text-decoration-none" })
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="align-middle">@item.Price.ToString("N0") đ</td>
+                                <td class="align-middle">
+                                    <div class="input-group" style="max-width: 120px;">
+                                        <input type="number" class="form-control quantity-input"
+                                               data-product-id="@item.ProductId"
+                                               value="@item.Quantity"
+                                               min="1">
+                                    </div>
+                                </td>
+                                <td class="align-middle fw-bold">@item.SubTotal.ToString("N0") đ</td>
+                                <td class="align-middle">
+                                    @using (Html.BeginForm("RemoveFromCart", "Cart", FormMethod.Post))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="productId" value="@item.ProductId" />
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="d-flex justify-content-between mt-3">
+                @Html.ActionLink("« Tiếp tục mua hàng", "Index", "Product", null, new { @class = "btn btn-outline-secondary" })
+                <a href="@Url.Action("ClearCart")" class="btn btn-outline-danger" onclick="return confirm('Bạn có chắc muốn xóa tất cả sản phẩm?')">
+                    Xóa giỏ hàng
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            @Html.Partial("_CartSummary")
+        </div>
+    </div>
+}
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('.quantity-input').on('change', function () {
+                var productId = $(this).data('product-id');
+                var quantity = $(this).val();
+
+                $.ajax({
+                    url: '@Url.Action("UpdateCart", "Cart")',
+                    type: 'POST',
+                    data: {
+                        productId: productId,
+                        quantity: quantity,
+                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function (result) {
+                        if (result.success) {
+                            location.reload();
+                        } else {
+                            alert(result.message);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+}
